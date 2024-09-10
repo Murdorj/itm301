@@ -1,10 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import FruitList from './FruitList';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
-    const [fruits, setFruits] = useState([]);
+    const [fruits, setFruits] = useState(() => {
+        const savedFruits = localStorage.getItem('fruits');
+        return savedFruits ? JSON.parse(savedFruits) : [];
+    });
     const fruitNameRef = useRef();
+
+    useEffect(() => {
+        localStorage.setItem('fruits', JSON.stringify(fruits));
+    }, [fruits]);
 
     function toggleFruit(id) {
         const newFruits = [...fruits];
@@ -33,7 +40,7 @@ function App() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex flex-col items-center justify-center ">
             <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-4 text-center text-gray-700">Жимсний жагсаалт</h1>
                 <FruitList fruits={fruits} toggleFruit={toggleFruit} />
@@ -48,12 +55,12 @@ function App() {
                 <div className="flex justify-between mt-4">
                     <button 
                         onClick={handleAddFruits} 
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                        className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                         Жагсаалт нэмэх
                     </button>
                     <button 
                         onClick={handleClearFruits} 
-                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">
+                        className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">
                         Арилгах
                     </button>
                 </div>
